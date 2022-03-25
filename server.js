@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 // const bcrypt = require("bcrypt-nodejs");
 const bcrypt = require("bcryptjs");
-const hash = bcrypt.hashSync('bacon', 8);
+const hash = bcrypt.hashSync("bacon", 8);
 const app = express();
 const port = 3000;
 app.use(bodyParser.json());
@@ -38,6 +38,17 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signin", (req, res) => {
+  bcrypt.compare(
+    "apple",
+    "$2a$10$3yruaCilBNiTeO3ixFEu7eP2xnWYx40yOwuFQ7bGx9JK/OvXziCwO",
+    function (err, res) {
+      console.log("first guess", res);
+    }
+  );
+  bcrypt.compare("not_bacon", "$2a$10$3yruaCilBNiTeO3ixFEu7eP2xnWYx40yOwuFQ7bGx9JK/OvXziCwO", function (err, res) {
+    console.log("second guess", res);
+  });
+
   if (
     req.body.email === database.users[0].email &&
     req.body.password === database.users[0].password
@@ -50,14 +61,11 @@ app.post("/signin", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { email, name, password } = req.body;
-  bcrypt.genSalt(10, function(err, salt){
-      bcrypt.hash(password, salt, function (err, hash) {
-        console.log(hash);
-      });
-  })
-//   bcrypt.hash(password, null, null, function (err, hash) {
-//     console.log(hash);
-//   });
+  //   bcrypt.genSalt(10, function(err, salt){
+  //       bcrypt.hash(password, salt, function (err, hash) {
+  //         console.log(hash);
+  //       });
+  //   })
   database.users.push({
     id: "125",
     name: name,
